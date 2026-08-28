@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>
+      [2026-07-18] v1.0.1 Dependency update from Senparc.Weixin to 6.23.2; Senparc.Weixin.MP to 16.24.4; Senparc.Weixin.Open to 4.24.2
+      [2026-07-20] v1.0.2 Dependency update from Senparc.Weixin to 6.24.0; Senparc.Weixin.MP to 16.25.0; Senparc.Weixin.Open to 4.24.3
+      [2026-07-23] v1.0.3 同步开放平台测试依赖
+      1、适配开放平台组件、NeuChar 3.0 与最新序列化依赖
+      2、补充开放平台流量主和微信云托管接口契约测试
+      3、补充 Open 当前目录共 52 项同步/异步入口、官方路径、Token 和响应模型契约测试
+      4、覆盖流量主、微信云托管、批量代云开发和普通代云开发 P2 产品簇
+      5、覆盖授权方选项、开放平台账号绑定状态和二维码校验文件增量
+      [2026-07-29] v1.0.4 完善开放平台测试项目发现配置
+      1、显式标记测试项目，确保开放平台契约测试被测试运行器加载
+      [2026-07-31] v1.0.5 Dependency update from Senparc.Weixin.MP to 16.25.2; Senparc.WeixinTests to 1.0.5; Senparc.Weixin to 6.25.1; Senparc.Weixin.Open to 4.24.5
+      [2026-08-05] v1.0.6 Dependency update from Senparc.Weixin.MP to 16.25.3 and Senparc.WeixinTests to 1.0.6
+    </PackageReleaseNotes>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Config\**" />
+    <EmbeddedResource Remove="Config\**" />
+    <None Remove="Config\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Senparc.Weixin.MP\Senparc.Weixin.MP\Senparc.Weixin.MP.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.WeixinTests\Senparc.WeixinTests.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.Weixin\Senparc.Weixin.net10.csproj" />
+    <ProjectReference Include="..\Senparc.Weixin.Open\Senparc.Weixin.Open.net10.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
+
+
+</Project>

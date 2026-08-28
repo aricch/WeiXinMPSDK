@@ -1,0 +1,33 @@
+{
+  "allowedRoots": [
+    "src",
+    "tests",
+    "tools"
+  ],
+  "excludedPathSegments": [
+    ".git",
+    ".svn",
+    ".hg",
+    ".vs",
+    ".idea",
+    "bin",
+    "obj",
+    "node_modules"
+  ],
+  "maxOperations": 100,
+  "maxFileBytes": 1048576,
+  "verification": [
+    {
+      "kind": "build",
+      "project": "src/Senparc.Weixin/Senparc.Weixin/Senparc.Weixin.csproj",
+      "framework": "net10.0",
+      "timeoutSeconds": 600
+    },
+    {
+      "kind": "test",
+      "project": "src/Senparc.Weixin/Senparc.WeixinTests/Senparc.WeixinTests.csproj",
+      "framework": "net10.0",
+      "timeoutSeconds": 600
+    }
+  ]
+}

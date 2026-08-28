@@ -1,0 +1,360 @@
+﻿#region Apache License Version 2.0
+/*----------------------------------------------------------------
+
+Copyright 2026 Jeffrey Su & Suzhou Senparc Network Technology Co.,Ltd.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file
+except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the
+License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+either express or implied. See the License for the specific language governing permissions
+and limitations under the License.
+
+Detail: https://github.com/JeffreySu/WeiXinMPSDK/blob/master/license.md
+
+----------------------------------------------------------------*/
+#endregion Apache License Version 2.0
+
+/*----------------------------------------------------------------
+    Copyright (C) 2026 Senparc
+  
+    文件名：TenPaySignHelper.cs
+    文件功能描述：微信支付V3签名Helper类 可用于创建签名 验证签名
+    
+    
+    创建标识：Senparc - 20210819
+
+    修改标识：Senparc - 20211002
+    修改描述：v0.3.500.4-preview4.3 TenPaySignHelper.CreateSign() 支持 Linux 和 Windows 环境
+    
+    修改标识：Senparc - 20231010
+    修改描述：v1.1.0 TenPaySignHelper.GetJsApiUiPackage() 方法添加 senparcWeixinSettingForTenpayV3 参数
+    
+    修改标识：mojinxun - 20250618
+    修改描述：v2.1.0 兼容微信平台证书和微信支付公钥 / PR #3144
+    
+    修改标识：ByteXiong - 20260118
+    修改描述：v2.3.3 fix: TenPaySignHelper.GetJsApiUiPackage 验签appId 传入无效,导致调起支付验签失败 #3244 感谢 @ByteXiong
+
+    修改标识：Senparc - 20260718
+    修改描述：v2.4.1 完善签名验证相关加密资源释放
+
+----------------------------------------------------------------*/
+
+
+using Org.BouncyCastle.Asn1.Ocsp;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using Senparc.Weixin.Entities;
+using Senparc.Weixin.Helpers;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Senparc.Weixin.TenPayV3.Helpers
+{
+    public class TenPaySignHelper
+    {
+        /// <summary>
+        /// 创建签名
+        /// <para>https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay4_0.shtml</para>
+        /// </summary>
+        /// <param name="message">签名串</param>
+        /// <param name="privateKey">签名私钥，如果为空，则从 <code>Senparc.Weixin.Config.SenparcWeixinSetting.TenPayV3_PrivateKey</code> 中获取</param>
+        /// <returns></returns>
+        public static string CreateSign(CertType certType, string message, string privateKey = null)
+        {
+            privateKey ??= Senparc.Weixin.Config.SenparcWeixinSetting.TenPayV3_PrivateKey;
+
+            if (certType == CertType.SM /*Senparc.Weixin.Config.SenparcWeixinSetting.EncryptionType == CertType.SM.ToString()*/)
+            {
+                byte[] keyData = Convert.FromBase64String(privateKey);
+
+                ECPrivateKeyParameters eCPrivateKeyParameters = SMPemHelper.LoadPrivateKeyToParameters(keyData);
+
+                byte[] signBytes = GmHelper.SignSm3WithSm2(eCPrivateKeyParameters, message);
+
+                return Convert.ToBase64String(signBytes);
+            }
+            else
+            {
+
+                // NOTE： 私钥不包括私钥文件起始的-----BEGIN PRIVATE KEY-----
+                //        亦不包括结尾的-----END PRIVATE KEY-----
+                //string privateKey = "{你的私钥}";
+
+                byte[] keyData = Convert.FromBase64String(privateKey);
+
+                #region 以下方法不兼容 Linux
+                //using (CngKey cngKey = CngKey.Import(keyData, CngKeyBlobFormat.Pkcs8PrivateBlob))
+                //using (RSACng rsa = new RSACng(cngKey))
+                //{
+                //    byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
+                //    return Convert.ToBase64String(rsa.SignData(data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
+                //}
+                #endregion
+
+                using (var rsa = System.Security.Cryptography.RSA.Create())
+                {
+                    rsa.ImportPkcs8PrivateKey(keyData, out _);
+                    byte[] data = System.Text.Encoding.UTF8.GetBytes(message);
+                    return Convert.ToBase64String(rsa.SignData(data, 0, data.Length, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取调起支付所需的签名
+        /// </summary>
+        /// <param name="timeStamp">时间戳</param>
+        /// <param name="nonceStr">随机串</param>
+        /// <param name="package">格式：prepay_id={0}</param>
+        /// <param name="senparcWeixinSettingForTenpayV3">可为空 为空将从Senparc.Weixin.Config获取</param>
+        /// <returns></returns>
+        [Obsolete("推荐使用带 TenPayV3Info 参数的 CreatePaySign() 方法，可以使用 new TenPayV3Info(senparcWeixinSettingForTenpayV3) 构建 TenPayV3Info 对象。", true)]
+        public static string CreatePaySign(string timeStamp, string nonceStr, string package, ISenparcWeixinSettingForTenpayV3 senparcWeixinSettingForTenpayV3)
+        {
+
+            return CreatePaySign(timeStamp, nonceStr, package, new TenPayV3Info(senparcWeixinSettingForTenpayV3));
+        }
+
+        /// <summary>
+        /// 获取调起支付所需的签名
+        /// </summary>
+        /// <param name="timeStamp">时间戳</param>
+        /// <param name="nonceStr">随机串</param>
+        /// <param name="package">格式：prepay_id={0}</param>
+        /// <param name="tenPayV3Info">支付配置信息（TenPayV3Info）</param>
+        /// <returns></returns>
+        public static string CreatePaySign(string timeStamp, string nonceStr, string package, TenPayV3Info tenPayV3Info)
+        {
+            var appId = tenPayV3Info.AppId;
+            var privateKey = tenPayV3Info.TenPayV3_PrivateKey;
+
+            if (!tenPayV3Info.TenPayV3_CertType.HasValue)
+            {
+                throw new Senparc.Weixin.Exceptions.WeixinException("没有设置证书加密类型（EncryptionType）");
+            }
+
+            return CreatePaySign(timeStamp, nonceStr, package, appId, privateKey, tenPayV3Info.TenPayV3_CertType.Value);
+        }
+
+        /// <summary>
+        /// 获取调起支付所需的签名
+        /// </summary>
+        /// <param name="timeStamp">时间戳</param>
+        /// <param name="nonceStr">随机串</param>
+        /// <param name="package">格式：prepay_id={0}</param>
+        /// <param name="privateKey">商户证书私钥</param>
+        /// <returns></returns>
+        public static string CreatePaySign(string timeStamp, string nonceStr, string package, string appId, string privateKey, CertType certType)
+        {
+            string contentForSign = $"{appId}\n{timeStamp}\n{nonceStr}\n{package}\n";
+            return CreateSign(certType, contentForSign, privateKey);
+        }
+
+        /// <summary>
+        /// 检验签名，以确保回调是由微信支付发送。
+        /// 签名规则见微信官方文档 https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay4_1.shtml。
+        /// return bool
+        /// </summary>
+        /// <param name="wechatpayTimestamp">HTTP头中的应答时间戳</param>
+        /// <param name="wechatpayNonce">HTTP头中的应答随机串</param>
+        /// <param name="wechatpaySignatureBase64">HTTP头中的应答签名（Base64）</param>
+        /// <param name="content">应答报文主体</param>
+        /// <param name="pubKey">平台公钥/微信支付公钥（必须是Unwrap的公钥）</param>
+        /// <param name="isTenPayPubKey">是否是微信支付公钥</param>
+        /// <returns></returns>
+        public static bool VerifyTenpaySign(CertType certType, string wechatpayTimestamp, string wechatpayNonce, string wechatpaySignatureBase64, string content, string pubKey, bool isTenPayPubKey = false)
+        {
+            //验签名串
+            var contentForSign = $"{wechatpayTimestamp}\n{wechatpayNonce}\n{content}\n";
+
+            if (isTenPayPubKey)
+            {
+                var publicKeyParam = (RsaKeyParameters)PublicKeyFactory.CreateKey(Convert.FromBase64String(pubKey));
+                var publicKeyXml = string.Format("<RSAKeyValue><Modulus>{0}</Modulus><Exponent>{1}</Exponent></RSAKeyValue>",
+                    Convert.ToBase64String(publicKeyParam.Modulus.ToByteArrayUnsigned()),
+                    Convert.ToBase64String(publicKeyParam.Exponent.ToByteArrayUnsigned()));
+
+                using (var rsa = new RSACryptoServiceProvider())
+                using (var sha256 = SHA256.Create())
+                {
+                    SecurityHelper.RSAFromXmlString(rsa, publicKeyXml);
+
+                    //RSAPKCS1SignatureDeformatter 对象
+                    RSAPKCS1SignatureDeformatter df = new RSAPKCS1SignatureDeformatter(rsa);
+                    //指定 SHA256
+                    df.SetHashAlgorithm("SHA256");
+                    //应答签名
+                    byte[] signature = Convert.FromBase64String(wechatpaySignatureBase64);
+                    //对比签名
+                    byte[] compareByte = sha256.ComputeHash(Encoding.UTF8.GetBytes(contentForSign));
+                    //验证签名
+                    return df.VerifySignature(compareByte, signature);
+                }
+            }
+
+
+            if (certType == CertType.SM)
+            {
+                byte[] pubKeyBytes = Convert.FromBase64String(pubKey);
+                ECPublicKeyParameters eCPublicKeyParameters = SMPemHelper.LoadPublicKeyToParameters(pubKeyBytes);
+                return GmHelper.VerifySm3WithSm2(eCPublicKeyParameters, contentForSign, wechatpaySignatureBase64);
+            }
+            else
+            {
+                //Base64 解码 pubKey（必须已经使用 ApiSecurityHelper.GetUnwrapCertKey() 方法进行 Unwrap）
+                var bs = Convert.FromBase64String(pubKey);
+                //使用 X509Certificate2 证书
+                using (var x509 = new X509Certificate2(bs))
+                using (var key = x509.GetRSAPublicKey())
+                using (var sha256 = SHA256.Create())
+                {
+                    if (key == null)
+                    {
+                        throw new CryptographicException("证书中未包含 RSA 公钥。");
+                    }
+
+                    //RSAPKCS1SignatureDeformatter 对象
+                    RSAPKCS1SignatureDeformatter df = new RSAPKCS1SignatureDeformatter(key);
+                    //指定 SHA256
+                    df.SetHashAlgorithm("SHA256");
+                    //应答签名
+                    byte[] signature = Convert.FromBase64String(wechatpaySignatureBase64);
+                    //对比签名
+                    byte[] compareByte = sha256.ComputeHash(Encoding.UTF8.GetBytes(contentForSign));
+                    //验证签名
+                    return df.VerifySignature(compareByte, signature);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 检验签名，以确保回调是由微信支付发送。
+        /// 签名规则见微信官方文档 https://pay.weixin.qq.com/wiki/doc/apiv3/wechatpay/wechatpay4_1.shtml。
+        /// return bool
+        /// </summary>
+        /// <param name="wechatpayTimestamp">HTTP头中的应答时间戳</param>
+        /// <param name="wechatpayNonce">HTTP头中的应答随机串</param>
+        /// <param name="wechatpaySignature">HTTP头中的应答签名</param>
+        /// <param name="content">应答报文主体</param>
+        /// <param name="pubKey">平台公钥 可为空</param>
+        /// <returns></returns>
+        public static async Task<bool> VerifyTenpaySign(string wechatpayTimestamp, string wechatpayNonce, string wechatpaySignature, string content, string serialNumber, ISenparcWeixinSettingForTenpayV3 senparcWeixinSettingForTenpayV3)
+        {
+            if (!senparcWeixinSettingForTenpayV3.EncryptionType.HasValue)
+            {
+                throw new Senparc.Weixin.Exceptions.WeixinException("没有设置证书加密类型（EncryptionType）");
+            }
+
+            //string contentForSign = $"{wechatpayTimestamp}\n{wechatpayNonce}\n{content}\n";
+
+            var tenpayV3InfoKey = TenPayHelper.GetRegisterKey(senparcWeixinSettingForTenpayV3.TenPayV3_MchId, senparcWeixinSettingForTenpayV3.TenPayV3_SubMchId);
+            var pubKey = await TenPayV3InfoCollection.Data[tenpayV3InfoKey].GetPublicKeyAsync(serialNumber, senparcWeixinSettingForTenpayV3);
+            var isTenpayPubKey = TenPaySignHelper.IsPublicKey(serialNumber);
+
+            return VerifyTenpaySign(senparcWeixinSettingForTenpayV3.EncryptionType.Value, wechatpayTimestamp, wechatpayNonce, wechatpaySignature, content, pubKey, isTenpayPubKey);
+        }
+
+        /// <summary>
+        /// 获取给 JsApi UI 使用的打包签名信息
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="prepayId"></param>
+        /// <returns></returns>
+        [Obsolete("v2.3.3 起该方法已过时，请使用 GetJsApiUiPackage(string prepayId, TenPayV3Info tenPayV3Info) 方法。")]
+        public static JsApiUiPackage GetJsApiUiPackage(string appId, string prepayId, ISenparcWeixinSettingForTenpayV3 senparcWeixinSettingForTenpayV3)
+        {
+            return GetJsApiUiPackage(appId, prepayId, null, senparcWeixinSettingForTenpayV3);
+        }
+
+        /// <summary>
+        /// 获取给 JsApi UI 使用的打包签名信息
+        /// </summary>
+        /// <param name="appId"></param>
+        /// <param name="prepayId"></param>
+        /// <param name="appType">应用类型，可为空，默认为 <see cref="JsApiAppType.WxOpen"/></param>
+        /// <param name="senparcWeixinSettingForTenpayV3">可为空，为空时将从 Senparc.Weixin.Config 获取</param>
+        /// <returns></returns>
+        [Obsolete("v2.3.3 起该方法已过时，请使用 GetJsApiUiPackage(string prepayId, TenPayV3Info tenPayV3Info, JsApiAppType appType) 方法。")]
+        public static JsApiUiPackage GetJsApiUiPackage(string appId, string prepayId, JsApiAppType? appType, ISenparcWeixinSettingForTenpayV3 senparcWeixinSettingForTenpayV3)
+        {
+            return GetJsApiUiPackage(prepayId, new TenPayV3Info(senparcWeixinSettingForTenpayV3), appType ?? JsApiAppType.WxOpen);
+        }
+
+        /// <summary>
+        /// 获取给 JsApi UI 使用的打包签名信息
+        /// </summary>
+        /// <param name="prepayId">预支付交易会话标识。</param>
+        /// <param name="tenPayV3Info">微信支付 V3 配置信息。</param>
+        /// <returns></returns>
+        [Obsolete("v2.4.0 起该方法已过时，请使用 GetJsApiUiPackage(string prepayId, TenPayV3Info tenPayV3Info, JsApiAppType? appType) 方法。")]
+        public static JsApiUiPackage GetJsApiUiPackage(string prepayId, TenPayV3Info tenPayV3Info)
+            => GetJsApiUiPackage(prepayId, tenPayV3Info, JsApiAppType.WxOpen);
+
+        /// <summary>
+        /// 获取给 JsApi UI 使用的打包签名信息
+        /// </summary>
+        /// <param name="prepayId">预支付交易会话标识。</param>
+        /// <param name="tenPayV3Info">微信支付 V3 配置信息。</param>
+        /// <param name="appType">应用类型（小程序或原生 App）。</param>
+        /// <returns></returns>
+        public static JsApiUiPackage GetJsApiUiPackage(string prepayId, TenPayV3Info tenPayV3Info, JsApiAppType appType = JsApiAppType.WxOpen)
+        {
+            if (tenPayV3Info == null)
+            {
+                throw new Senparc.Weixin.TenPayV3.TenpayApiRequestException("tenPayV3Info 参数不能为空！");
+            }
+
+            var timeStamp = TenPayV3Util.GetTimestamp();
+            var nonceStr = TenPayV3Util.GetNoncestr();
+            var prepayIdPackage = GetPrepayIdPackage(prepayId, appType);
+            var sign = TenPaySignHelper.CreatePaySign(timeStamp, nonceStr, prepayIdPackage, tenPayV3Info);
+
+            JsApiUiPackage jsApiUiPackage = new(tenPayV3Info.AppId, timeStamp, nonceStr, prepayIdPackage, sign);
+            return jsApiUiPackage;
+        }
+
+        /// <summary>
+        /// 根据微信小程序或原生 APP 定义不同格式的 prepayId 签名字符串
+        /// </summary>
+        /// <param name="prepayId"></param>
+        /// <param name="appType"></param>
+        /// <returns></returns>
+        private static string GetPrepayIdPackage(string prepayId, JsApiAppType appType)
+        {
+            if (string.IsNullOrWhiteSpace(prepayId))
+            {
+                return prepayId;
+            }
+
+            const string prepayIdPrefix = "prepay_id=";
+            var normalizedPrepayId = prepayId.StartsWith(prepayIdPrefix, StringComparison.OrdinalIgnoreCase)
+                ? prepayId.Substring(prepayIdPrefix.Length)
+                : prepayId;
+
+            return appType == JsApiAppType.NativeApp
+                ? normalizedPrepayId
+                : $"{prepayIdPrefix}{normalizedPrepayId}";
+        }
+
+        /// <summary>
+        /// 是否为 Public Key（微信支付公钥）
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static bool IsPublicKey(string key)
+        {
+            return key.StartsWith("PUB_KEY_ID_");
+        }
+    }
+}

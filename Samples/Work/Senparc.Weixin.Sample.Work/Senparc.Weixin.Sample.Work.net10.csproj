@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>1.0.2</Version>
+		<PackageReleaseNotes>
+		  [2026-07-23] v1.0.1 升级企业微信示例依赖
+		  1、升级 AspNet、Work 与 Work.Middleware 至最新稳定版
+		  2、适配最新企业微信组件和中间件
+		  [2026-07-31] v1.0.2 升级企业微信示例依赖
+		  1、升级 Senparc.Weixin.AspNet 1.6.6 与 Work 3.32.1
+		  2、升级 Senparc.Weixin.Work.Middleware 至 1.5.5
+		</PackageReleaseNotes>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- 此节点为 Sample 共享文件需要而添加，实际项目无需添加 -->
+		<GenerateEmbeddedFilesManifest Condition=" '$(Configuration)' != 'Release' ">true</GenerateEmbeddedFilesManifest>
+	</PropertyGroup>
+
+	<!-- 此节点为 Sample 共享文件需要而添加，实际项目无需添加 -->
+	<ItemGroup Condition=" '$(Configuration)' != 'Release' ">
+		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.3.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.0" />
+		<!--<EmbeddedResource Include="..\..\Shared\Senparc.Weixin.Sample.Shared\wwwroot\**\*">
+			<Link>wwwroot\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>-->
+		<EmbeddedResource Include="wwwroot\**\*" />
+	</ItemGroup>
+
+	<!-- 此节点为 Sample 共享文件需要而添加，实际项目无需添加 -->
+	<Import Project="..\..\Shared\Senparc.Weixin.Sample.Shared\Senparc.Weixin.Sample.Shared.projitems" Label="Shared" />
+
+	<!--引用 Nuget 包-->
+	<ItemGroup>
+	  <PackageReference Include="Senparc.Weixin.AspNet" Version="1.6.6" />
+	  <PackageReference Include="Senparc.Weixin.Work" Version="3.32.1" />
+	  <PackageReference Include="Senparc.Weixin.Work.Middleware" Version="1.5.5" />
+	</ItemGroup>
+
+	<!--直接引用源码-->
+	<!--<ItemGroup>
+		<ProjectReference Include="..\..\..\src\Senparc.Weixin.AspNet\Senparc.Weixin.AspNet.net10.csproj" />
+		<ProjectReference Include="..\..\..\src\Senparc.Weixin.Work.Middleware\Senparc.Weixin.Work.Middleware.net10.csproj" />
+		<ProjectReference Include="..\..\..\src\Senparc.Weixin.Work\Senparc.Weixin.Work\Senparc.Weixin.Work.net10.csproj" />
+	</ItemGroup>-->
+</Project>

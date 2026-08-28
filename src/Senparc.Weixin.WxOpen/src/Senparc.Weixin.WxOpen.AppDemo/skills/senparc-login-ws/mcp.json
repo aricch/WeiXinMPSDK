@@ -1,0 +1,121 @@
+{
+  "apis": [
+    {
+      "name": "performLogin",
+      "description": "执行 Senparc SDK 小程序登录：调用 wx.login 换取 code，再请求 /WxOpen/OnLogin 获取 sessionId。发送 WebSocket 消息前需先完成登录。",
+      "_meta": { "ui": { "componentPath": "components/login-status-card/index" } },
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "sessionId": { "type": "string" },
+          "message": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "connectWebSocket",
+      "description": "连接 Senparc WebSocket Hub（默认 wss://sdk.weixin.senparc.com/SenparcHub）。内部会先确保登录态，再建立 WebSocket 长连接。",
+      "_meta": { "ui": { "componentPath": "components/connection-status-card/index" } },
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "hubPath": { "type": "string", "description": "Hub 路径，默认 /SenparcHub" }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "connected": { "type": "boolean" },
+          "status": { "type": "string" },
+          "hubUrl": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sendWebSocketMessage",
+      "description": "通过已建立的 WebSocket 连接发送消息到 Senparc Hub。消息格式为 { Message, SessionId, FormId }。若未连接会自动先建立连接。",
+      "_meta": { "ui": { "componentPath": "components/send-result-card/index" } },
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "message": { "type": "string", "description": "要发送的消息内容" }
+        },
+        "required": ["message"],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "sent": { "type": "boolean" },
+          "message": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "getWebSocketMessages",
+      "description": "获取当前 WebSocket 会话中已接收的最近消息列表（从内存缓冲区读取，需先连接 WebSocket 并等待服务端推送）。",
+      "_meta": { "ui": { "componentPath": "components/message-list-card/index" } },
+      "inputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "limit": { "type": "number", "description": "返回条数上限，默认 10" }
+        },
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "index": { "type": "number" },
+                "content": { "type": "string" },
+                "time": { "type": "string" }
+              }
+            }
+          },
+          "total": { "type": "number" }
+        },
+        "additionalProperties": false
+      }
+    }
+  ],
+  "components": [
+    {
+      "path": "components/login-status-card/index",
+      "relatedPage": "/pages/Login/Login"
+    },
+    {
+      "path": "components/connection-status-card/index",
+      "relatedPage": "/pages/websocket/websocket"
+    },
+    {
+      "path": "components/send-result-card/index",
+      "relatedPage": "/pages/websocket/websocket"
+    },
+    {
+      "path": "components/message-list-card/index",
+      "relatedPage": "/pages/websocket/websocket"
+    }
+  ]
+}

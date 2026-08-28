@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>
+      [2026-07-18] v1.0.1 Dependency update from Senparc.Weixin to 6.23.2; Senparc.Weixin.Cache.Redis to 2.21.2
+      [2026-07-20] v1.0.2 Dependency update from Senparc.Weixin to 6.24.0; Senparc.Weixin.Cache.Redis to 2.21.3
+      [2026-07-23] v1.0.3 同步 Redis 缓存测试依赖
+      1、适配 Redis 缓存组件及 CO2NET.Cache.Redis 新版本
+      [2026-07-29] v1.0.4 完善 Redis 缓存测试项目发现配置
+      1、显式标记测试项目，确保缓存回归测试被测试运行器加载
+      [2026-07-31] v1.0.5 Dependency update from Senparc.WeixinTests to 1.0.5; Senparc.Weixin to 6.25.1; Senparc.Weixin.Cache.Redis to 2.21.5
+      [2026-08-05] v1.0.6 Dependency update from Senparc.WeixinTests to 1.0.6
+    </PackageReleaseNotes>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Config\**" />
+    <EmbeddedResource Remove="Config\**" />
+    <None Remove="Config\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.WeixinTests\Senparc.WeixinTests.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.Weixin\Senparc.Weixin.net10.csproj" />
+    <ProjectReference Include="..\Senparc.Weixin.Cache.Redis\Senparc.Weixin.Cache.Redis.net10.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
+</Project>

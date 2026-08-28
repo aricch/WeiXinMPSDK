@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>
+      [2026-07-18] v1.0.1 Dependency update from Senparc.Weixin to 6.23.2; Senparc.Weixin.TenPay to 1.18.2
+      [2026-07-20] v1.0.2 Dependency update from Senparc.Weixin to 6.24.0; Senparc.Weixin.TenPay to 1.18.3
+      [2026-07-23] v1.0.3 补充微信支付序列化、企业支付异步与资源释放测试
+      1、验证分账接收方使用源生成元数据完成序列化
+      2、同步微信支付项目版本和测试依赖
+      3、补充微信支付 Native AOT 序列化回归测试
+      4、固定四条既有企业支付路径及四组同步/异步入口
+      5、验证签名元数据、共享 XML 空值安全解析、企业红包取消令牌及资源确定性释放
+      [2026-07-29] v1.0.4 增加海关报关 V2 契约测试并完善测试发现配置
+      1、覆盖报关、报关状态查询和重新申报的 XML 签名与多子单解析
+      2、显式标记测试项目，确保新增支付契约测试被测试运行器加载
+      [2026-07-31] v1.0.5 Dependency update from Senparc.WeixinTests to 1.0.5; Senparc.Weixin to 6.25.1; Senparc.Weixin.TenPay to 1.20.1
+      [2026-08-05] v1.0.6 Dependency update from Senparc.WeixinTests to 1.0.6
+    </PackageReleaseNotes>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Config\**" />
+    <EmbeddedResource Remove="Config\**" />
+    <None Remove="Config\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.WeixinTests\Senparc.WeixinTests.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.Weixin\Senparc.Weixin.net10.csproj" />
+    <ProjectReference Include="..\Senparc.Weixin.TenPay\Senparc.Weixin.TenPay.net10.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
+
+
+</Project>

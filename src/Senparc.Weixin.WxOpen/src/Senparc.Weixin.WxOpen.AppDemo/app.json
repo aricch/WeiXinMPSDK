@@ -1,0 +1,35 @@
+{
+  "lazyCodeLoading": "requiredComponents",
+  "agent": {
+    "skills": [
+      {
+        "name": "senparc-login-ws",
+        "description": "Senparc SDK 登录鉴权与 WebSocket 实时通信演示",
+        "path": "skills/senparc-login-ws"
+      }
+    ]
+  },
+  "subPackages": [
+    {
+      "root": "skills",
+      "independent": true,
+      "pages": []
+    }
+  ],
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/websocket/websocket",
+    "pages/LivePusher/LivePusher",
+    "pages/QrCode/QrCode",
+    "pages/websocket_signalr/websocket_signalr",
+    "pages/Login/Login"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap81.json"
+}

@@ -1,0 +1,178 @@
+{
+  "timestamp": "2026-06-08T18:07:00.834Z",
+  "projectPath": "/Volumes/DevelopAndData/SenparcProjects/WeiXinMPSDK/src/Senparc.Weixin.WxOpen/src/Senparc.Weixin.WxOpen.AppDemo",
+  "skillDirs": [
+    "skills/senparc-login-ws"
+  ],
+  "ignoreSync": {
+    "changed": false,
+    "added": []
+  },
+  "summary": {
+    "total": 141,
+    "passed": 141,
+    "failed": 0,
+    "errors": 0,
+    "warnings": 0,
+    "buildStatus": "fail"
+  },
+  "rules": {
+    "V001": {
+      "stage": "registration",
+      "level": "error",
+      "name": "禁止依赖主包"
+    },
+    "V003": {
+      "stage": "component",
+      "level": "error",
+      "name": "WXML 组件白名单"
+    },
+    "V005": {
+      "stage": "component",
+      "level": "error",
+      "name": "CSS 禁止属性"
+    },
+    "V006": {
+      "stage": "component",
+      "level": "error",
+      "name": "CSS 禁止选择器"
+    },
+    "V002": {
+      "stage": "registration",
+      "level": "error",
+      "name": "已注册接口必须为 async function"
+    },
+    "V007": {
+      "stage": "registration",
+      "level": "error",
+      "name": "定义-注册一致性"
+    },
+    "V008": {
+      "stage": "registration",
+      "level": "error",
+      "name": "注册-实现一致性"
+    },
+    "V009": {
+      "stage": "output",
+      "level": "error",
+      "name": "接口返回值-outputSchema一致性"
+    },
+    "V010": {
+      "stage": "component",
+      "level": "error",
+      "name": "组件取值-接口返回一致性"
+    },
+    "V011": {
+      "stage": "component",
+      "level": "error",
+      "name": "setData-WXML绑定一致性"
+    },
+    "V012": {
+      "stage": "component",
+      "level": "error",
+      "name": "原子接口若关联原子组件则需文件齐全"
+    },
+    "V013": {
+      "stage": "registration",
+      "level": "error",
+      "name": "mcp.json 体积限制"
+    },
+    "V014": {
+      "stage": "registration",
+      "level": "error",
+      "name": "SKILL.md 必须存在且文件名严格大写"
+    },
+    "V015": {
+      "stage": "component",
+      "level": "error",
+      "name": "原子组件必须配置关联小程序页面"
+    },
+    "V016": {
+      "stage": "registration",
+      "level": "error",
+      "name": "app.json 的 agent.skills[].description 必须存在且非空"
+    }
+  },
+  "results": [],
+  "passedSummary": [
+    {
+      "id": "V001",
+      "name": "禁止依赖主包",
+      "count": 36
+    },
+    {
+      "id": "V002",
+      "name": "已注册接口必须为 async function",
+      "count": 4
+    },
+    {
+      "id": "V003",
+      "name": "WXML 组件白名单",
+      "count": 16
+    },
+    {
+      "id": "V005",
+      "name": "CSS 禁止属性",
+      "count": 40
+    },
+    {
+      "id": "V006",
+      "name": "CSS 禁止选择器",
+      "count": 24
+    },
+    {
+      "id": "V007",
+      "name": "定义-注册一致性",
+      "count": 1
+    },
+    {
+      "id": "V008",
+      "name": "注册-实现一致性",
+      "count": 1
+    },
+    {
+      "id": "V009",
+      "name": "接口返回值-outputSchema一致性",
+      "count": 4
+    },
+    {
+      "id": "V011",
+      "name": "setData-WXML绑定一致性",
+      "count": 4
+    },
+    {
+      "id": "V012",
+      "name": "原子接口若关联原子组件则需文件齐全",
+      "count": 4
+    },
+    {
+      "id": "V013",
+      "name": "mcp.json 体积限制",
+      "count": 1
+    },
+    {
+      "id": "V014",
+      "name": "SKILL.md 必须存在且文件名严格大写",
+      "count": 1
+    },
+    {
+      "id": "V015",
+      "name": "原子组件必须配置关联小程序页面",
+      "count": 4
+    },
+    {
+      "id": "V016",
+      "name": "app.json 的 agent.skills[].description 必须存在且非空",
+      "count": 1
+    }
+  ],
+  "build": {
+    "ran": true,
+    "success": false,
+    "stage": "unknown",
+    "durationMs": 263,
+    "message": "CLI 返回非预期错误，未识别到明确阶段",
+    "logTail": "[error] IDE service port disabled. To use CLI Call, please enter y to confirm enabling CLI capability, or manually open IDE -> Settings -> Security Settings, and set Service Port On.\nFor more details see: https://developers.weixin.qq.com/miniprogram/en/dev/devtools/cli.html\n[error] 工具的服务端口已关闭。要使用命令行调用工具，请手动打开工具 -> 设置 -> 安全设置，将服务端口开启。\n详细信息: https://developers.weixin.qq.com/miniprogram/dev/devtools/cli.html\n[info] 退出\n- initialize\n✖ initialize",
+    "exitCode": 246
+  }
+}

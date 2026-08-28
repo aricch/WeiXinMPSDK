@@ -1,0 +1,14 @@
+<view class="card">
+  <view class="card-header">
+    <text class="card-title">登录状态</text>
+  </view>
+  <view class="card-body">
+    <text class="status-text">{{statusText}}</text>
+    <text class="session-text" wx:if="{{sessionId}}">会话已建立</text>
+  </view>
+  <view class="card-actions">
+    <view class="action-btn primary" hover-class="action-btn-hover" bindtap="onTapConnect">
+      <text class="action-btn-text">连接 WebSocket</text>
+    </view>
+  </view>
+</view>

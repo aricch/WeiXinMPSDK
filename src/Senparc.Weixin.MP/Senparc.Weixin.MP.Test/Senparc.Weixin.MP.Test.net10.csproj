@@ -1,0 +1,55 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Version>1.0.6</Version>
+    <PackageReleaseNotes>
+      [2026-07-18] v1.0.1 Dependency update from Senparc.Weixin to 6.23.2; Senparc.Weixin.MP to 16.24.4
+      [2026-07-20] v1.0.2 Dependency update from Senparc.Weixin to 6.24.0; Senparc.Weixin.MP to 16.25.0
+      [2026-07-23] v1.0.3 同步公众号测试依赖
+      1、适配公众号组件、NeuChar 3.0 与最新序列化依赖
+      2、补充公众号新增接口的序列化与契约测试
+      3、支持契约测试从隔离构建目录定位源码，并覆盖图像、医疗、非税和一物一码产品簇
+      [2026-07-29] v1.0.4 完善公众号测试项目发现配置
+      1、显式标记测试项目，确保公众号契约测试被测试运行器加载
+      [2026-07-31] v1.0.5 Dependency update from Senparc.Weixin.Cache.Redis to 2.21.5; Senparc.Weixin.MP.Middleware to 1.5.6; Senparc.Weixin.TenPay to 1.20.1; Senparc.WeixinTests to 1.0.5; Senparc.Weixin to 6.25.1; Senparc.Weixin.MP to 16.25.2
+      [2026-08-05] v1.0.6 增加公众号缓存事件上下文恢复回归测试
+      1、覆盖缺失 Event 字段的历史缓存 JSON 恢复
+      2、覆盖数字枚举 Event 到具体公众号事件实体的映射
+      3、同步 Senparc.Weixin.MP.Middleware 至 1.5.7、Senparc.WeixinTests 至 1.0.6、Senparc.Weixin.MP 至 16.25.3
+    </PackageReleaseNotes>
+    <!--<AssemblyName>Senparc.Weixin.MP.Test</AssemblyName>-->
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+    <PackageReference Include="Moq" Version="4.20.69" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Senparc.Weixin.Cache\Senparc.Weixin.Cache.Redis\Senparc.Weixin.Cache.Redis.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin.MP.Middleware\Senparc.Weixin.MP.Middleware.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin.TenPay\Senparc.Weixin.TenPay\Senparc.Weixin.TenPay.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.WeixinTests\Senparc.WeixinTests.net10.csproj" />
+    <ProjectReference Include="..\..\Senparc.Weixin\Senparc.Weixin\Senparc.Weixin.net10.csproj" />
+    <ProjectReference Include="..\Senparc.Weixin.MP\Senparc.Weixin.MP.net10.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
+  </ItemGroup>
+
+</Project>

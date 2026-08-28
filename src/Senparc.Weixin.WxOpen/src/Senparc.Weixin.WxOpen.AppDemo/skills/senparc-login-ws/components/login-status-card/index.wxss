@@ -1,0 +1,75 @@
+/* ratio=4:3 | 色源：pages/Login/Login.wxss .auth-btn { background:#07b84a }
+ *      暗黑：品牌绿降明度 #064d28，底 #1a2e22
+ */
+.card {
+  padding: 3.2vw;
+  border-radius: 1.07vw;
+  background: #ffffff;
+  border: 1px solid rgba(7, 184, 74, 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  .card {
+    background: #1a2e22;
+    border-color: rgba(7, 184, 74, 0.35);
+  }
+}
+
+.card-header {
+  margin-bottom: 2.13vw;
+}
+
+.card-title {
+  font-size: 4.53vw;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+  .card-title {
+    color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+.card-body {
+  margin-bottom: 3.2vw;
+}
+
+.status-text {
+  display: block;
+  font-size: 4vw;
+  color: #07b84a;
+  margin-bottom: 1.07vw;
+}
+
+.session-text {
+  display: block;
+  font-size: 3.2vw;
+  color: rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  .session-text {
+    color: rgba(255, 255, 255, 0.45);
+  }
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  padding: 2.13vw 4.27vw;
+  border-radius: 1.07vw;
+  background: #07b84a;
+}
+
+.action-btn-hover {
+  opacity: 0.85;
+}
+
+.action-btn-text {
+  font-size: 4vw;
+  color: #ffffff;
+}

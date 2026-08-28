@@ -1,0 +1,23 @@
+<view class="card">
+  <view class="card-header">
+    <text class="card-title">WebSocket 消息</text>
+    <text class="card-subtitle">共 {{totalCount}} 条</text>
+  </view>
+  <view class="card-body">
+    <view wx:if="{{messages.length === 0}}" class="empty-tip">
+      <text class="empty-text">暂无消息，可先发送测试消息</text>
+    </view>
+    <view wx:for="{{visibleMessages}}" wx:key="index" class="message-item">
+      <text class="message-time">{{item.time}}</text>
+      <text class="message-content">{{item.content}}</text>
+    </view>
+    <view wx:if="{{omittedCount > 0}}" class="more-tip" hover-class="more-tip-hover" bindtap="onTapRefresh">
+      <text class="more-text">还有 {{omittedCount}} 条，点击刷新</text>
+    </view>
+  </view>
+  <view class="card-actions">
+    <view class="action-btn primary" hover-class="action-btn-hover" bindtap="onTapSend">
+      <text class="action-btn-text">发送消息</text>
+    </view>
+  </view>
+</view>

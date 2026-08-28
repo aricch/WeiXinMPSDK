@@ -1,0 +1,17 @@
+<view class="card">
+  <view class="card-header">
+    <text class="card-title">WebSocket 连接</text>
+  </view>
+  <view class="card-body">
+    <text class="status-text">{{statusText}}</text>
+    <text class="hub-text">{{hubUrl}}</text>
+  </view>
+  <view class="card-actions">
+    <view class="action-btn primary" hover-class="action-btn-hover" bindtap="onTapSend">
+      <text class="action-btn-text">发送测试消息</text>
+    </view>
+    <view class="action-btn secondary" hover-class="action-btn-hover" bindtap="onTapMessages">
+      <text class="action-btn-text secondary-text">查看消息</text>
+    </view>
+  </view>
+</view>

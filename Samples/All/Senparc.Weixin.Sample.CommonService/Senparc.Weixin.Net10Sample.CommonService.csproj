@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <Version>3.1.4</Version>
+        <PackageReleaseNotes>
+          [2026-07-18] v3.0.3 Dependency update from Senparc.Weixin to 6.23.2; Senparc.Weixin.MP to 16.24.4; Senparc.Weixin.Open to 4.24.2; Senparc.Weixin.TenPayV3 to 2.4.1; Senparc.Weixin.Work to 3.31.1; Senparc.Weixin.WxOpen to 3.27.3
+          [2026-07-18] v3.1.0 AI 消息示例迁移至 AgentKernel 会话模型
+          1、使用 Microsoft.Extensions.AI 保存和恢复聊天历史
+          2、升级文本、图像生成及对话记忆到 AgentKernel/MAF
+          [2026-07-23] v3.1.1 升级公共服务依赖并适配最新 Senparc 组件
+          1、升级 NeuChar 3.0，并保持 AgentKernel 0.1.10 兼容
+          2、同步微信模块依赖以支持最新序列化与运行时能力
+          [2026-07-29] v3.1.2 Dependency update from Senparc.Weixin.TenPay to 1.20.0 and Senparc.Weixin.TenPayV3 to 2.6.0
+          1、示例公共服务同步支持海关报关、商家转账授权、智慧商圈和安全探测能力
+          [2026-07-31] v3.1.3 Dependency update from Senparc.WebSocket to 1.2.4; Senparc.Weixin.AspNet to 1.6.7; Senparc.Weixin.Cache.CsRedis to 1.3.5; Senparc.Weixin.Cache.Memcached to 2.19.6; Senparc.Weixin.Cache.Redis to 2.21.5; Senparc.Weixin.MP.Middleware to 1.5.6; Senparc.Weixin.MP.MvcExtension to 7.17.5; Senparc.Weixin.MP to 16.25.2; Senparc.Weixin.Open to 4.24.5; Senparc.Weixin.TenPayV3 to 2.6.1; Senparc.Weixin.TenPay to 1.20.1; Senparc.Weixin.Work.Middleware to 1.5.6; Senparc.Weixin.Work to 3.32.2; Senparc.Weixin.WxOpen.Middleware to 1.5.6; Senparc.Weixin.WxOpen to 3.28.2; Senparc.Weixin to 6.25.1
+          [2026-08-05] v3.1.4 Dependency update from Senparc.Weixin.MP.Middleware to 1.5.7; Senparc.Weixin.MP.MvcExtension to 7.17.6; Senparc.Weixin.MP to 16.25.3; Senparc.Weixin.WxOpen.Middleware to 1.5.7; Senparc.Weixin.WxOpen to 3.28.3
+        </PackageReleaseNotes>
+		<LangVersion>latest</LangVersion>
+        <AssemblyName>Senparc.Weixin.MP.Sample.CommonService</AssemblyName>
+        <RootNamespace>Senparc.Weixin.MP.Sample.CommonService</RootNamespace>
+        <Description>此项目是 Sample.Net6 下启动项目</Description>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Remove="Properties\**" />
+        <EmbeddedResource Remove="Properties\**" />
+        <None Remove="Properties\**" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Remove="packages.config" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Senparc.AI.AgentKernel" Version="0.1.11" />
+        <PackageReference Include="Senparc.NeuChar" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+        <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+        <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
+        <PackageReference Include="ZXing.Net" Version="0.16.9" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\src\Senparc.WebSocket\src\Senparc.WebSocket\Senparc.WebSocket\Senparc.WebSocket.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.AspNet\Senparc.Weixin.AspNet.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.Cache\Senparc.Weixin.Cache.CsRedis\Senparc.Weixin.Cache.CsRedis.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.Cache\Senparc.Weixin.Cache.Memcached\Senparc.Weixin.Cache.Memcached.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.Cache\Senparc.Weixin.Cache.Redis\Senparc.Weixin.Cache.Redis.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.MP.Middleware\Senparc.Weixin.MP.Middleware.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.MP.MvcExtension\Senparc.Weixin.MP.MvcExtension\Senparc.Weixin.MP.MvcExtension.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.MP\Senparc.Weixin.MP\Senparc.Weixin.MP.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.Open\Senparc.Weixin.Open\Senparc.Weixin.Open.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.TenPay\Senparc.Weixin.TenPayV3\Senparc.Weixin.TenPayV3.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.TenPay\Senparc.Weixin.TenPay\Senparc.Weixin.TenPay.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.Work.Middleware\Senparc.Weixin.Work.Middleware.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.Work\Senparc.Weixin.Work\Senparc.Weixin.Work.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.WxOpen.Middleware\Senparc.Weixin.WxOpen.Middleware.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin.WxOpen\src\Senparc.Weixin.WxOpen\Senparc.Weixin.WxOpen\Senparc.Weixin.WxOpen.net10.csproj" />
+        <ProjectReference Include="..\..\..\src\Senparc.Weixin\Senparc.Weixin\Senparc.Weixin.net10.csproj" />
+    </ItemGroup>
+</Project>

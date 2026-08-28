@@ -1,0 +1,17 @@
+﻿using Senparc.Weixin.WxOpen.Containers;
+using Senparc.Weixin.MP.Test.CommonAPIs;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Senparc.Weixin.WxOpen.Tests
+{
+    public abstract class WxOpenBaseTest : CommonApiTest
+    {
+        public WxOpenBaseTest()
+        {
+            AccessTokenContainer.RegisterAsync(base._wxOpenAppId, base._wxOpenAppSecret, "小程序单元测试")
+                .GetAwaiter().GetResult();
+        }
+    }
+}

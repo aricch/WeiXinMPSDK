@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "WeChat Developer AI Assistant",
+  "version": "0.1.3",
+  "description": "微信文档页面AI助手，提供智能接口查询功能",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://developers.weixin.qq.com/*",
+    "https://pay.weixin.qq.com/*",
+    "https://sdk.weixin.senparc.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://developers.weixin.qq.com/*",
+        "https://developer.work.weixin.qq.com/*",
+        "https://pay.weixin.qq.com/doc*"
+      ],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/icon16.png", "icons/icon48.png", "icons/icon128.png"],
+      "matches": [
+        "https://developers.weixin.qq.com/*",
+        "https://developer.work.weixin.qq.com/*",
+        "https://pay.weixin.qq.com/*"
+      ]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "WeChat Developer AI Assistant"
+  }
+}

@@ -1,0 +1,88 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<Version>1.0.2</Version>
+		<PackageReleaseNotes>
+		  [2026-07-23] v1.0.1 升级微信支付 V2 示例依赖
+		  1、升级 AspNet、MP、MP.MVC 与 TenPay 至最新稳定版
+		  2、适配最新微信支付基础组件
+		  [2026-07-31] v1.0.2 升级微信支付 V2 示例依赖
+		  1、升级 Senparc.Weixin.AspNet 1.6.6、MP 16.25.1 与 MP.MVC 7.17.4
+		  2、升级 Senparc.Weixin.TenPay 至 1.20.0
+		</PackageReleaseNotes>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<!-- 此节点为 Sample 共享文件需要而添加，实际项目无需添加 -->
+		<GenerateEmbeddedFilesManifest Condition=" '$(Configuration)' != 'Release' ">true</GenerateEmbeddedFilesManifest>
+	</PropertyGroup>
+	
+		<!-- 此节点为 Sample 共享文件需要而添加，实际项目无需添加 -->
+	<ItemGroup Condition=" '$(Configuration)' != 'Release' ">
+		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.3.0" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="10.0.0" />
+		<!--<EmbeddedResource Include="..\..\Shared\Senparc.Weixin.Sample.Shared\wwwroot\**\*">
+			<Link>wwwroot\%(RecursiveDir)/%(FileName)%(Extension)</Link>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</EmbeddedResource>-->
+		<EmbeddedResource Include="wwwroot\**\*" />
+	</ItemGroup>
+	<!-- 此节点为 Sample 共享文件需要而添加，实际项目无需添加 -->
+	<Import Project="..\..\Shared\Senparc.Weixin.Sample.Shared\Senparc.Weixin.Sample.Shared.projitems" Label="Shared" />
+
+	<!--引用 Nuget 包-->
+	<ItemGroup>
+	  <PackageReference Include="Senparc.Weixin.AspNet" Version="1.6.6" />
+	  <PackageReference Include="Senparc.Weixin.MP" Version="16.25.1" />
+	  <PackageReference Include="Senparc.Weixin.MP.MVC" Version="7.17.4" />
+	  <PackageReference Include="Senparc.Weixin.TenPay" Version="1.20.0" />
+	  <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+	  <PackageReference Include="ZXing.Net" Version="0.16.9" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Update="Views\TenPayV3\H5Pay.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\H5PaySuccess.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\Index.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\JsApi.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\PayNotifyUrl.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\ProductItem.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\ProductList.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\Refund.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	  <Content Update="Views\TenPayV3\View.cshtml">
+	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+	  </Content>
+	</ItemGroup>
+
+	<!--直接引用源码-->
+	<!--<ItemGroup>
+	  <ProjectReference Include="..\..\..\src\Senparc.Weixin.AspNet\Senparc.Weixin.AspNet.net10.csproj" />
+	  <ProjectReference Include="..\..\..\src\Senparc.Weixin.MP\Senparc.Weixin.MP\Senparc.Weixin.MP.net10.csproj" />
+	  <ProjectReference Include="..\..\..\src\Senparc.Weixin.TenPay\Senparc.Weixin.TenPay\Senparc.Weixin.TenPay.net10.csproj" />
+	</ItemGroup>-->
+</Project>
